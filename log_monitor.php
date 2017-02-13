@@ -21,12 +21,19 @@ $commando->option('l')
         return file_exists($filename);
     });
 
+$commando->option('g')
+    ->aka('glob')
+    ->describedAs('Single filepath pattern to check. Will override the globList Array found in the config.');
+
 $commando->option('t')
     ->aka('to')
     ->describedAs('Email address to send the log to if it has changed. Will append this email to the list in the array');
 
 if (!empty($commando['logname'])) {
     $config['log_list']['logs'] = array($commando['logname']);
+}
+if (!empty($commando['glob'])) {
+    $config['log_list']['globList'] = array($commando['glob']);
 }
 if (!empty($commando['to'])) {
     $config['mailer']['to'][] = $commando['to'];
@@ -41,6 +48,18 @@ $logFiles = array();
 
 // List of log files to monitor.
 $filenames = $config['log_list']['logs'];
+
+// Add in any files found via globbing:
+$globList = $config['log_list']['globList'];
+if (!empty($globList)) {
+    foreach ($globList as $globPattern) {
+        foreach (glob($globPattern, GLOB_BRACE) as $fileNamePath) {
+            if (file_exists($fileNamePath)) {
+                $filenames[] = $fileNamePath;
+            }
+        }
+    }
+}
 
 /**
  * A Closure to send the email with any attachments.
