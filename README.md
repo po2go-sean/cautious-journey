@@ -17,7 +17,7 @@ Add "some@email.address" to the array of To Addresses: `php log_monitor.php --to
 Replace the log list found in the config with the single file found at "path/to/log.file":  
 `php log_monitor.php --logname 'path/to/log.file'`
 
-Replace the globList found in the config with the single `glob()` pattern "path/to/*.file":  
+Replace the globList found in the config with the single `glob()` pattern "path/to/\*.file":  
 `php log_monitor.php --glob 'path/to/*.file'`
 
 Short aliases
