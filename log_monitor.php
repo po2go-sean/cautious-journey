@@ -121,7 +121,7 @@ $sendMail = function ($attachments) use ($now, $config)
         $mail->Subject = $subject;
         $mail->Body    = $message;
 
-
+        // TODO: Since echo isn't helpful during a cron (it is written to /var/spool/mail/[user] we should investigate a better alert for errors in sending.
         if(!$mail->send()) {
             echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;
