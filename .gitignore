@@ -1,5 +1,5 @@
 composer.phar
-composer
+# composer # For now, I actually want composer to be a part of the project. this will change.
 /vendor/
 
 # Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
