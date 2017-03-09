@@ -29,6 +29,11 @@ $commando->option('t')
     ->aka('to')
     ->describedAs('Email address to send the log to if it has changed. Will append this email to the list in the array');
 
+$commando->option('a')
+    ->aka('age')
+    ->describedAs('Age in seconds. Monitored files *NEWER* than this age will be emailed. Default is ' . $config['log_list']['age'] . '.')
+    ->default($config['log_list']['age']);
+
 if (!empty($commando['logname'])) {
     $config['log_list']['logs'] = array($commando['logname']);
 }
@@ -42,7 +47,7 @@ if (!empty($commando['to'])) {
 $now = new DateTime;
 
 // Age in seconds.
-$allowedAge = $config['log_list']['age'];
+$allowedAge = $commando['age'];
 
 $logFiles = array();
 
