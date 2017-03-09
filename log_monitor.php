@@ -34,6 +34,12 @@ $commando->option('a')
     ->describedAs('Age in seconds. Monitored files *NEWER* than this age will be emailed. Default is ' . $config['log_list']['age'] . '.')
     ->default($config['log_list']['age']);
 
+$commando->option('o')
+    ->aka('overrideTo')
+    ->describedAs('Boolean. All other arguments are overrides, but by default --to is additive. Set this to true to make it override. NB: if --to is not also set this option does nothing.')
+    ->boolean()
+    ->default(false);
+
 if (!empty($commando['logname'])) {
     $config['log_list']['logs'] = array($commando['logname']);
 }
@@ -42,6 +48,9 @@ if (!empty($commando['glob'])) {
 }
 if (!empty($commando['to'])) {
     $config['mailer']['to'][] = $commando['to'];
+    if ($commando['overrideTo']) {
+        $config['mailer']['to'] = array($commando['to']);
+    }
 }
 
 $now = new DateTime;
