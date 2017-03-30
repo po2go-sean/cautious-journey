@@ -1,4 +1,7 @@
 <?php
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 date_default_timezone_set('UTC');
 
 include 'vendor/autoload.php';
@@ -82,6 +85,8 @@ if (!empty($globList)) {
  */
 $sendMail = function ($attachments) use ($now, $config)
 {
+    $logger = new Logger('mailError');
+    $logger->pushHandler(new StreamHandler(__DIR__ . 'LogMonitor.log', Logger::INFO));
 
     if (!empty($attachments)) {
         $hostname = gethostname() ? : php_uname('n');
@@ -137,10 +142,12 @@ $sendMail = function ($attachments) use ($now, $config)
 
         // TODO: Since echo isn't helpful during a cron (it is written to /var/spool/mail/[user] we should investigate a better alert for errors in sending.
         if(!$mail->send()) {
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            $logger->error('Message could not be sent.');
+            $logger->error('Mailer Error: ' . $mail->ErrorInfo);
+            $logger->info($message);
         } else {
-            echo 'Message has been sent';
+            $logger->info('Message has been sent');
+            $logger->info($message);
         }
 
     }
