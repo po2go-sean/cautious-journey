@@ -43,6 +43,11 @@ $commando->option('o')
     ->boolean()
     ->default(false);
 
+$commando->option('c')
+    ->aka('config')
+    ->describedAs('Full or Relative path to config file. A config file is INI based see ./sample.config.ini for an example. Defaults to \'config.ini\' in the log monitor directory.')
+    ->default('config.ini');
+
 if (!empty($commando['logname'])) {
     $config['log_list']['logs'] = array($commando['logname']);
 }
