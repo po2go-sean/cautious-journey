@@ -34,8 +34,7 @@ $commando->option('t')
 
 $commando->option('a')
     ->aka('age')
-    ->describedAs('Age in seconds. Monitored files *NEWER* than this age will be emailed. Default is ' . $config['log_list']['age'] . '.')
-    ->default($config['log_list']['age']);
+    ->describedAs('Age in seconds. Monitored files *NEWER* than this age will be emailed. (Will override value in config file.)');
 
 $commando->option('o')
     ->aka('overrideTo')
@@ -61,10 +60,14 @@ if (!empty($commando['to'])) {
     }
 }
 
+if (!empty($commando['age'])) {
+    $config['log_list']['age'] = $commando['age'];
+}
+
 $now = new DateTime;
 
 // Age in seconds.
-$allowedAge = $commando['age'];
+$allowedAge = $config['log_list']['age'];
 
 $logFiles = array();
 
