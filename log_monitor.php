@@ -11,8 +11,6 @@ if (version_compare(PHP_VERSION, '5.6.1') >= 0) {
     $scanMode = INI_SCANNER_TYPED;
 }
 
-$config = parse_ini_file('config.ini',true,$scanMode);
-
 $commando = new \Commando\Command();
 
 // Define CLI Args
@@ -34,14 +32,20 @@ $commando->option('t')
 
 $commando->option('a')
     ->aka('age')
-    ->describedAs('Age in seconds. Monitored files *NEWER* than this age will be emailed. Default is ' . $config['log_list']['age'] . '.')
-    ->default($config['log_list']['age']);
+    ->describedAs('Age in seconds. Monitored files *NEWER* than this age will be emailed. (Will override value in config file.)');
 
 $commando->option('o')
     ->aka('overrideTo')
     ->describedAs('Boolean. All other arguments are overrides, but by default --to is additive. Set this to true to make it override. NB: if --to is not also set this option does nothing.')
     ->boolean()
     ->default(false);
+
+$commando->option('c')
+    ->aka('config')
+    ->describedAs('Full or Relative path to config file. A config file is INI based see ./sample.config.ini for an example. Defaults to \'config.ini\' in the log monitor directory.')
+    ->default('config.ini');
+
+$config = parse_ini_file($commando['config'],true,$scanMode);
 
 if (!empty($commando['logname'])) {
     $config['log_list']['logs'] = array($commando['logname']);
@@ -56,10 +60,14 @@ if (!empty($commando['to'])) {
     }
 }
 
+if (!empty($commando['age'])) {
+    $config['log_list']['age'] = $commando['age'];
+}
+
 $now = new DateTime;
 
 // Age in seconds.
-$allowedAge = $commando['age'];
+$allowedAge = $config['log_list']['age'];
 
 $logFiles = array();
 
