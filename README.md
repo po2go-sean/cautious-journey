@@ -52,4 +52,5 @@ TODOS / Feature Requests:
 * Add arguments to override any given config param.
 * Log errors occuring on send.
 * Read logs and remove "irrelevant" data
+* TEST Rebase commits test1
 ---
