@@ -1,6 +1,6 @@
 {
   "require": {
-    "phpmailer/phpmailer": "~5.2",
+    "phpmailer/phpmailer": "~6.5",
     "nategood/commando": "*",
     "monolog/monolog": "^1.0"
   }
